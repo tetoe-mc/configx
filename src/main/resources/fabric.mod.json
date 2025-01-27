@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "configx",
+	"version": "${version}",
+	"name": "Config X",
+	"description": "A fabric API library for plugins to load & save configurations",
+	"authors": [
+		"NriotHrreion"
+	],
+	"contact": {
+		"homepage": "https://github.com/tetoe-mc/configx",
+		"sources": "https://github.com/tetoe-mc/configx"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/configx/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.nocpiun.configx.ConfigX"
+		]
+	},
+	"mixins": [
+		"configx.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.11.0",
+		"minecraft": ">=1.12",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

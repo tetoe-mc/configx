@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "net.nocpiun.configx.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"LibMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
