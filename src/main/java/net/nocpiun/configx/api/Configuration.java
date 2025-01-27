@@ -31,7 +31,7 @@ public class Configuration {
     }
 
     public Path getPath() {
-        return ConfigX.CONFIG_PATH.resolve(getFileName());
+        return ConfigX.CONFIG_PATH.resolve(getFileName()).toAbsolutePath();
     }
 
     @SuppressWarnings("unchecked")

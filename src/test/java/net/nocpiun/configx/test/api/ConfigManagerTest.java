@@ -1,11 +1,16 @@
 package net.nocpiun.configx.test.api;
 
+import net.nocpiun.configx.ConfigX;
 import net.nocpiun.configx.api.ConfigManager;
 import net.nocpiun.configx.api.Configuration;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class ConfigManagerTest {
@@ -40,5 +45,10 @@ public class ConfigManagerTest {
         config.save();
 
         Assertions.assertEquals(false, manager.getOrCreateConfig(testConfigName, defaultTestConfig).getValue("test-2"));
+    }
+
+    @AfterAll
+    public static void afterAll() throws IOException {
+        FileUtils.deleteDirectory(new File(ConfigX.CONFIG_PATH.toString()));
     }
 }
