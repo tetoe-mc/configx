@@ -35,6 +35,10 @@ public class ConfigManagerTest {
         Assertions.assertEquals(true, config.getValue("test-2"));
         Assertions.assertEquals(1234, (int) config.getValue("test-3"));
         Assertions.assertEquals((Object) null, config.getValue("test-4"));
+
+        Assertions.assertEquals(testConfigName, config.getName());
+        Assertions.assertEquals(testConfigName +".dat", config.getFileName());
+        Assertions.assertEquals(ConfigX.CONFIG_PATH.resolve(config.getFileName()), config.getPath());
     }
 
     @Test
