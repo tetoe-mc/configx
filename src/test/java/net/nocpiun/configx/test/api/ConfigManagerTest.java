@@ -37,7 +37,7 @@ public class ConfigManagerTest {
         Assertions.assertEquals((Object) null, config.getValue("test-4"));
 
         Assertions.assertEquals(testConfigName, config.getName());
-        Assertions.assertEquals(testConfigName +".dat", config.getFileName());
+        Assertions.assertEquals(testConfigName +".json", config.getFileName());
         Assertions.assertEquals(ConfigX.CONFIG_PATH.resolve(config.getFileName()), config.getPath());
     }
 

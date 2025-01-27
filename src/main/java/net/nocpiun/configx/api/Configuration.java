@@ -27,7 +27,7 @@ public class Configuration {
     }
 
     public String getFileName() {
-        return name +".dat";
+        return name +".json";
     }
 
     public Path getPath() {
