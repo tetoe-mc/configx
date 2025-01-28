@@ -3,6 +3,10 @@ on:
   push:
     branches: [main]
 
+env:
+  USERNAME: ${{ secrets.USERNAME }}
+  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
 jobs:
   publish:
     strategy:
