@@ -1,8 +1,8 @@
-package net.nocpiun.configx.test.api;
+package space.nocp.configx.test.api;
 
-import net.nocpiun.configx.ConfigX;
-import net.nocpiun.configx.api.ConfigManager;
-import net.nocpiun.configx.api.Configuration;
+import space.nocp.configx.ConfigX;
+import space.nocp.configx.api.ConfigManager;
+import space.nocp.configx.api.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;

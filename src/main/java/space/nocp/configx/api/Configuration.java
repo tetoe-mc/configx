@@ -1,6 +1,6 @@
-package net.nocpiun.configx.api;
+package space.nocp.configx.api;
 
-import net.nocpiun.configx.ConfigX;
+import space.nocp.configx.ConfigX;
 
 import java.io.File;
 import java.nio.file.Path;

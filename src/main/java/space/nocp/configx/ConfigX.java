@@ -1,11 +1,11 @@
-package net.nocpiun.configx;
+package space.nocp.configx;
 
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.nocpiun.configx.api.ConfigManager;
-import net.nocpiun.configx.command.ConfigXCommand;
+import space.nocp.configx.api.ConfigManager;
+import space.nocp.configx.command.ConfigXCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

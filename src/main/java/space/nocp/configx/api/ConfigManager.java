@@ -1,7 +1,7 @@
-package net.nocpiun.configx.api;
+package space.nocp.configx.api;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.nocpiun.configx.ConfigX;
+import space.nocp.configx.ConfigX;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.Gson;
 

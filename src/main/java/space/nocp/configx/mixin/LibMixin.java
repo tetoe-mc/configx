@@ -1,4 +1,4 @@
-package net.nocpiun.configx.mixin;
+package space.nocp.configx.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

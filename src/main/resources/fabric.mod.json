@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.nocpiun.configx.ConfigX"
+          "space.nocp.configx.ConfigX"
 		]
 	},
 	"mixins": [

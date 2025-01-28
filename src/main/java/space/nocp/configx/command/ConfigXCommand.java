@@ -1,4 +1,4 @@
-package net.nocpiun.configx.command;
+package space.nocp.configx.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -9,7 +9,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.nocpiun.configx.ConfigX;
+import space.nocp.configx.ConfigX;
 
 import java.util.Optional;
 
