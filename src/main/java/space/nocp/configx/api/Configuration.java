@@ -1,5 +1,6 @@
 package space.nocp.configx.api;
 
+import com.google.gson.Gson;
 import space.nocp.configx.ConfigX;
 
 import java.io.File;
@@ -19,7 +20,11 @@ public class Configuration {
     }
 
     public void save() {
-        ConfigManager.get().saveFile(file, config);
+        this.save(new Gson());
+    }
+
+    public void save(Gson providedGson) {
+        ConfigManager.get().saveFile(file, config, providedGson);
     }
 
     public String getName() {
