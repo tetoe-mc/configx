@@ -8,23 +8,28 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
-public class Configuration {
+public class Configuration<T> {
     private final String name;
     private File file;
-    private HashMap<String, Object> config;
+    private T config;
 
-    protected Configuration(String name, File file, HashMap<String, Object> loadedConfig) {
+    protected Configuration(String name, File file, T loadedConfig) {
         this.name = name;
         this.file = file;
         config = loadedConfig;
     }
 
-    public void save() {
-        this.save(new Gson());
+    public void save(T obj) {
+        this.save(obj, new Gson());
     }
 
-    public void save(Gson providedGson) {
+    public void save(T obj, Gson providedGson) {
+        config = obj;
         ConfigManager.get().saveFile(file, config, providedGson);
+    }
+
+    public void save() {
+        ConfigManager.get().saveFile(file, config, new Gson());
     }
 
     public String getName() {
@@ -39,20 +44,7 @@ public class Configuration {
         return ConfigX.CONFIG_PATH.resolve(getFileName()).toAbsolutePath();
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getValue(String key) {
-        return (T) config.get(key);
-    }
-
-    public <T> void setValue(String key, T value) {
-        config.put(key, value);
-    }
-
-    public void setAll(HashMap<String, Object> newConfig) {
-        newConfig.forEach(this::setValue);
-    }
-
-    public void forEach(BiConsumer<? super String, ? super Object> action) {
-        config.forEach(action);
+    public T getObject() {
+        return config;
     }
 }

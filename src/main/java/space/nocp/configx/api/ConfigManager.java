@@ -1,6 +1,7 @@
 package space.nocp.configx.api;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import org.jetbrains.annotations.NotNull;
 import space.nocp.configx.ConfigX;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.Gson;
@@ -12,7 +13,7 @@ import java.util.HashSet;
 public class ConfigManager {
     private static ConfigManager instance;
 
-    private final HashSet<Configuration> configurations = new HashSet<>();
+    private final HashSet<Configuration<Object>> configurations = new HashSet<>();
 
     private ConfigManager() {
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
@@ -21,40 +22,33 @@ public class ConfigManager {
         });
     }
 
-    public Configuration getOrCreateConfig(String name, @Nullable HashMap<String, Object> defaultConfig) {
-        return this.getOrCreateConfig(name, defaultConfig, new Gson());
+    public <T> Configuration<T> getOrCreateConfig(String name, @NotNull T defaultConfig, @NotNull Class<T> type) {
+        return this.getOrCreateConfig(name, defaultConfig, type, new Gson());
     }
 
-    public Configuration getOrCreateConfig(String name, @Nullable HashMap<String, Object> defaultConfig, Gson providedGson) {
+    @SuppressWarnings("unchecked")
+    public <T> Configuration<T> getOrCreateConfig(String name, @NotNull T defaultConfig, @NotNull Class<T> type, Gson providedGson) {
         File file = new File(ConfigX.CONFIG_PATH.toString(), name +".json");
-        HashMap<String, Object> loaded;
+        T loaded;
         if(file.exists()) {
-            loaded = loadFile(file, providedGson);
-
-            if(defaultConfig != null && loaded != null) {
-                defaultConfig.forEach((key, value) -> {
-                    if(!loaded.containsKey(key)) {
-                        loaded.put(key, value);
-                    }
-                });
-            }
+            loaded = loadFile(file, type, providedGson);
         } else {
-            loaded = (defaultConfig == null) ? new HashMap<>() : defaultConfig;
+            loaded = defaultConfig;
         }
         saveFile(file, loaded, providedGson);
 
-        Configuration config = new Configuration(name, file, loaded);
-        configurations.add(config);
+        Configuration<T> config = new Configuration<T>(name, file, loaded);
+        configurations.add((Configuration<Object>) config);
 
         return config;
     }
 
     @SuppressWarnings("unchecked")
-    private HashMap<String, Object> loadFile(File file, Gson gson) {
+    private <T> T loadFile(File file, Class<T> type, Gson gson) {
         try {
             FileInputStream fis = new FileInputStream(file);
 
-            HashMap<String, Object> result = (HashMap<String, Object>) gson.fromJson(new String(fis.readAllBytes()), HashMap.class);
+            T result = gson.fromJson(new String(fis.readAllBytes()), type);
             fis.close();
 
             ConfigX.LOGGER.info(file.getName() +" is successfully loaded.");
@@ -67,7 +61,7 @@ public class ConfigManager {
     }
 
     /** @noinspection ResultOfMethodCallIgnored*/
-    protected void saveFile(File file, HashMap<String, Object> config, Gson gson) {
+    protected <T> void saveFile(File file, T config, Gson gson) {
         try(FileOutputStream fos = new FileOutputStream(file)) {
             file.createNewFile();
 

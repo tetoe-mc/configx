@@ -6,35 +6,40 @@ import space.nocp.configx.api.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+
+class TestClass {
+    String test1;
+    boolean test2;
+    int test3;
+    Object test4;
+
+    protected TestClass(String test1, boolean test2, int test3, Object test4) {
+        this.test1 = test1;
+        this.test2 = test2;
+        this.test3 = test3;
+        this.test4 = test4;
+    }
+}
 
 public class ConfigManagerTest {
-    private static final HashMap<String, Object> defaultTestConfig = new HashMap<>();
+    private static final TestClass defaultTestConfig = new TestClass("Hello World", true, 1234, null);
     private static final String testConfigName = "test-config";
 
     private final ConfigManager manager = ConfigManager.get();
 
-    @BeforeAll
-    public static void beforeAll() {
-        defaultTestConfig.put("test-1", "Hello World");
-        defaultTestConfig.put("test-2", true);
-        defaultTestConfig.put("test-3", 1234);
-        defaultTestConfig.put("test-4", null);
-    }
-
     @Test
     public void testReadConfig() {
-        Configuration config = manager.getOrCreateConfig(testConfigName, defaultTestConfig);
+        Configuration<TestClass> config = manager.getOrCreateConfig(testConfigName, defaultTestConfig, TestClass.class);
+        TestClass obj = config.getObject();
 
-        Assertions.assertEquals("Hello World", config.getValue("test-1"));
-        Assertions.assertEquals(true, config.getValue("test-2"));
-        Assertions.assertEquals(1234, (int) config.getValue("test-3"));
-        Assertions.assertEquals((Object) null, config.getValue("test-4"));
+        Assertions.assertEquals("Hello World", obj.test1);
+        Assertions.assertTrue(obj.test2);
+        Assertions.assertEquals(1234, obj.test3);
+        Assertions.assertEquals((Object) null, obj.test4);
 
         Assertions.assertEquals(testConfigName, config.getName());
         Assertions.assertEquals(testConfigName +".json", config.getFileName());
@@ -43,12 +48,13 @@ public class ConfigManagerTest {
 
     @Test
     public void testModifyConfig() {
-        Configuration config = manager.getOrCreateConfig(testConfigName, defaultTestConfig);
+        Configuration<TestClass> config = manager.getOrCreateConfig(testConfigName, defaultTestConfig, TestClass.class);
+        TestClass obj = config.getObject();
 
-        config.setValue("test-2", false);
-        config.save();
+        obj.test2 = false;
+        config.save(obj);
 
-        Assertions.assertEquals(false, manager.getOrCreateConfig(testConfigName, defaultTestConfig).getValue("test-2"));
+        Assertions.assertFalse(manager.getOrCreateConfig(testConfigName, defaultTestConfig, TestClass.class).getObject().test2);
     }
 
     @AfterAll
