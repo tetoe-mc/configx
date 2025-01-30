@@ -3,11 +3,9 @@ package space.nocp.configx.api;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.jetbrains.annotations.NotNull;
 import space.nocp.configx.ConfigX;
-import org.jetbrains.annotations.Nullable;
 import com.google.gson.Gson;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class ConfigManager {
@@ -20,6 +18,8 @@ public class ConfigManager {
             configurations.forEach(Configuration::save);
             ConfigX.LOGGER.info("All configurations are saved.");
         });
+
+        ConfigX.LOGGER.info("ConfigX is ready. Config dir path: "+ ConfigX.CONFIG_PATH);
     }
 
     public <T> Configuration<T> getOrCreateConfig(String name, @NotNull T defaultConfig, @NotNull Class<T> type) {
@@ -37,13 +37,12 @@ public class ConfigManager {
         }
         saveFile(file, loaded, providedGson);
 
-        Configuration<T> config = new Configuration<T>(name, file, loaded);
+        Configuration<T> config = new Configuration<>(name, file, loaded);
         configurations.add((Configuration<Object>) config);
 
         return config;
     }
 
-    @SuppressWarnings("unchecked")
     private <T> T loadFile(File file, Class<T> type, Gson gson) {
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -51,7 +50,6 @@ public class ConfigManager {
             T result = gson.fromJson(new String(fis.readAllBytes()), type);
             fis.close();
 
-            ConfigX.LOGGER.info(file.getName() +" is successfully loaded.");
             return result;
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,9 +64,6 @@ public class ConfigManager {
             file.createNewFile();
 
             fos.write(gson.toJson(config).getBytes());
-            fos.close();
-
-            ConfigX.LOGGER.info(file.getName() +" is successfully saved.");
         } catch (IOException e) {
             e.printStackTrace();
         }

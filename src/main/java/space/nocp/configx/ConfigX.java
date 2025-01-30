@@ -23,7 +23,5 @@ public class ConfigX implements ModInitializer {
 		manager = ConfigManager.get();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> new ConfigXCommand(dispatcher));
-
-		LOGGER.info("ConfigX is ready. Config dir path: "+ CONFIG_PATH.toString());
 	}
 }
