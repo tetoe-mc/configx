@@ -73,20 +73,29 @@ jar {
 
 // configure the maven publication
 publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
+	publication {
+		mavenJava(MavenPublication) {
+			groupId = project.maven_group
 			artifactId = project.archives_base_name
+			version = project.mod_version
+
 			from components.java
 		}
 	}
 
 	repositories {
 		maven {
-			name = project.archives_base_name
-			url = uri("https://maven.pkg.github.com/tetoe-mc/configx")
-			credentials {
-				username = System.getenv("USERNAME")
-				password = System.getenv("ACCESS_TOKEN")
+			url = "https://repo.codemc.io/repository/tetoe-mc/" //
+
+			//
+			def mavenUsername = System.getenv("JENKINS_USERNAME")
+			def mavenPassword = System.getenv("JENKINS_PASSWORD")
+
+			if (mavenUsername != null && mavenPassword != null) {
+				credentials {
+					username = mavenUsername
+					password = mavenPassword
+				}
 			}
 		}
 	}
