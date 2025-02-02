@@ -8,18 +8,26 @@ import space.nocp.configx.ConfigX;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConfigManager {
     private static ConfigManager instance;
+    private static final AtomicBoolean isNormalStop = new AtomicBoolean(false);
 
     private final List<Configuration> configList = new ArrayList<>();
 
     private ConfigManager() {
+        // Auto save when server stops or crashes
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            // Auto save when server stopping
             configList.forEach(Configuration::save);
             ConfigX.LOGGER.info("[ConfigX] All configurations are saved.");
         });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if(!isNormalStop.get()) {
+                configList.forEach(Configuration::save);
+                ConfigX.LOGGER.info("[ConfigX] All configurations are saved.");
+            }
+        }));
 
         ConfigX.LOGGER.info("[ConfigX] Ready. Config dir path: "+ ConfigX.CONFIG_PATH);
     }
