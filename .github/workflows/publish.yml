@@ -1,7 +1,5 @@
 name: publish
-on:
-  push:
-    branches: [main]
+on: workflow_dispatch
 
 env:
   USERNAME: ${{ secrets.USERNAME }}
