@@ -73,7 +73,7 @@ jar {
 
 // configure the maven publication
 publishing {
-	publication {
+	publications {
 		mavenJava(MavenPublication) {
 			groupId = project.maven_group
 			artifactId = project.archives_base_name
