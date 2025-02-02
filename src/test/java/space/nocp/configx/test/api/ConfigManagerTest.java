@@ -1,8 +1,8 @@
 package space.nocp.configx.test.api;
 
+import org.junit.jupiter.api.BeforeAll;
 import space.nocp.configx.ConfigX;
-import space.nocp.configx.api.ConfigManager;
-import space.nocp.configx.api.Configuration;
+import space.nocp.configx.api.*;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -27,34 +27,46 @@ class TestClass {
 
 public class ConfigManagerTest {
     private static final TestClass defaultTestConfig = new TestClass("Hello World", true, 1234, null);
-    private static final String testConfigName = "test-config";
+    private static final String testConfigId = "test-config";
 
-    private final ConfigManager manager = ConfigManager.get();
+    @BeforeAll
+    public static void beforeAll() {
+        ConfigManager.get().register(testConfigId, defaultTestConfig, TestClass.class);
+    }
 
     @Test
-    public void testReadConfig() {
-        Configuration<TestClass> config = manager.getOrCreateConfig(testConfigName, defaultTestConfig, TestClass.class);
-        TestClass obj = config.getObject();
+    public void testReadConfig() throws Exception {
+        final Configuration<TestClass> config = ConfigManager.get().config(testConfigId);
+        if(config == null) {
+            throw new Exception("Config is not found.");
+        }
+
+        final TestClass obj = config.get();
 
         Assertions.assertEquals("Hello World", obj.test1);
         Assertions.assertTrue(obj.test2);
         Assertions.assertEquals(1234, obj.test3);
         Assertions.assertEquals((Object) null, obj.test4);
 
-        Assertions.assertEquals(testConfigName, config.getName());
-        Assertions.assertEquals(testConfigName +".json", config.getFileName());
+        Assertions.assertEquals(testConfigId, config.id);
+        Assertions.assertEquals(testConfigId +".json", config.getFileName());
         Assertions.assertEquals(ConfigX.CONFIG_PATH.resolve(config.getFileName()), config.getPath());
     }
 
     @Test
-    public void testModifyConfig() {
-        Configuration<TestClass> config = manager.getOrCreateConfig(testConfigName, defaultTestConfig, TestClass.class);
-        TestClass obj = config.getObject();
+    public void testModifyConfig() throws Exception {
+        final Configuration<TestClass> config = ConfigManager.get().config(testConfigId);
+        if(config == null) {
+            throw new Exception("Config is not found.");
+        }
+
+        final TestClass obj = config.get();
 
         obj.test2 = false;
-        config.save(obj);
+        config.set(obj);
+        config.save();
 
-        Assertions.assertFalse(manager.getOrCreateConfig(testConfigName, defaultTestConfig, TestClass.class).getObject().test2);
+        Assertions.assertFalse(((TestClass) ConfigManager.get().config(testConfigId).get()).test2);
     }
 
     @AfterAll

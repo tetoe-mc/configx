@@ -1,72 +1,48 @@
 package space.nocp.configx.api;
 
+import com.google.gson.Gson;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.nocp.configx.ConfigX;
-import com.google.gson.Gson;
 
-import java.io.*;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigManager {
     private static ConfigManager instance;
 
-    private final HashSet<Configuration<Object>> configurations = new HashSet<>();
+    private final List<Configuration> configList = new ArrayList<>();
 
     private ConfigManager() {
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
-            configurations.forEach(Configuration::save);
-            ConfigX.LOGGER.info("All configurations are saved.");
+            // Auto save when server stopping
+            configList.forEach(Configuration::save);
+            ConfigX.LOGGER.info("[ConfigX] All configurations are saved.");
         });
 
-        ConfigX.LOGGER.info("ConfigX is ready. Config dir path: "+ ConfigX.CONFIG_PATH);
+        ConfigX.LOGGER.info("[ConfigX] Ready. Config dir path: "+ ConfigX.CONFIG_PATH);
     }
 
-    public <T> Configuration<T> getOrCreateConfig(String name, @NotNull T defaultConfig, @NotNull Class<T> type) {
-        return this.getOrCreateConfig(name, defaultConfig, type, new Gson());
+    public <C> Configuration<C> register(@NotNull String id, @NotNull C defaultConfig, @NotNull Class<C> typeOfConfig) {
+        return register(id, defaultConfig, typeOfConfig, new Gson());
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> Configuration<T> getOrCreateConfig(String name, @NotNull T defaultConfig, @NotNull Class<T> type, Gson providedGson) {
-        File file = new File(ConfigX.CONFIG_PATH.toString(), name +".json");
-        T loaded;
-        if(file.exists()) {
-            loaded = loadFile(file, type, providedGson);
-        } else {
-            loaded = defaultConfig;
-        }
-        saveFile(file, loaded, providedGson);
-
-        Configuration<T> config = new Configuration<>(name, file, loaded);
-        configurations.add((Configuration<Object>) config);
-
+    public <C> Configuration<C> register(@NotNull String id, @NotNull C defaultConfig, @NotNull Class<C> typeOfConfig, Gson gson) {
+        Configuration<C> config = new Configuration<>(id, defaultConfig, typeOfConfig, gson);
+        configList.add(config);
         return config;
     }
 
-    private <T> T loadFile(File file, Class<T> type, Gson gson) {
-        try {
-            FileInputStream fis = new FileInputStream(file);
-
-            T result = gson.fromJson(new String(fis.readAllBytes()), type);
-            fis.close();
-
-            return result;
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <C> Configuration<C> config(String id) {
+        for(Configuration item : configList) {
+            if(item.id.equals(id)) {
+                return (Configuration<C>) item;
+            }
         }
-
         return null;
-    }
-
-    /** @noinspection ResultOfMethodCallIgnored*/
-    protected <T> void saveFile(File file, T config, Gson gson) {
-        try(FileOutputStream fos = new FileOutputStream(file)) {
-            file.createNewFile();
-
-            fos.write(gson.toJson(config).getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static ConfigManager get() {

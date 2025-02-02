@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import space.nocp.configx.api.ConfigManager;
+import space.nocp.configx.legacy_api.ConfigManager;
 import space.nocp.configx.command.ConfigXCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +15,9 @@ public class ConfigX implements ModInitializer {
 	public static final String MOD_ID = "configx";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().toAbsolutePath();
+	public static final boolean ENABLE_CONFIGX_LOG = true;
 
-	public ConfigManager manager;
+	private ConfigManager manager;
 
 	@Override
 	public void onInitialize() {
