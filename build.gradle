@@ -85,9 +85,8 @@ publishing {
 
 	repositories {
 		maven {
-			url = "https://repo.codemc.io/repository/tetoe-mc/" //
+			url = "https://repo.codemc.io/repository/tetoe-mc/"
 
-			//
 			def mavenUsername = System.getenv("JENKINS_USERNAME")
 			def mavenPassword = System.getenv("JENKINS_PASSWORD")
 
