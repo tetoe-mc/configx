@@ -22,10 +22,10 @@ repositories {
 
 dependencies {
     // Approach #1: Ensure Config X is always available by including it within your own jar
-    include(modImplementation("space.nocp:configx:2.0.1"))
+    include(modImplementation("space.nocp:configx:2.0.3"))
     
     // Approach #2: Depend on Config X, but require that users install it themselves
-    modImplementation "space.nocp:configx:2.0.1"
+    modImplementation "space.nocp:configx:2.0.3"
 }
 ```
 
